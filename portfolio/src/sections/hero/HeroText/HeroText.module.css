@@ -1,0 +1,52 @@
+.root {
+  position: absolute;
+  z-index: var(--z-text);
+  left: var(--gutter);
+  /* Never wider than the screen, so the name cannot be cut off. */
+  max-width: calc(100% - 2 * var(--gutter));
+  bottom: clamp(5rem, 16vh, 10rem);
+  display: grid;
+  justify-items: start;
+  /* Text sits under the swarm and never blocks it. */
+  pointer-events: none;
+  user-select: none;
+}
+
+.kicker {
+  font-family: var(--font-ui);
+  font-size: var(--text-xs);
+  font-weight: 500;
+  letter-spacing: var(--tracking-ui);
+  text-transform: uppercase;
+  color: var(--color-muted);
+  margin-bottom: var(--space-2);
+}
+
+.name {
+  font-family: var(--font-display);
+  font-size: var(--text-display);
+  font-weight: 400;
+  line-height: 0.82;
+  letter-spacing: -0.02em;
+  text-transform: lowercase;
+  color: var(--color-paper);
+  /* A touch of ink bleed. */
+  text-shadow: 0 0 0.6px var(--color-paper);
+}
+
+/* Each word of the name on its own line. */
+.word {
+  display: block;
+}
+
+.tagline {
+  font-family: var(--font-script);
+  font-size: var(--text-script);
+  line-height: 1;
+  color: var(--color-paper);
+  opacity: 0.85;
+  margin-top: var(--space-2);
+  margin-left: 0.6em;
+  transform: rotate(-4deg);
+  transform-origin: left center;
+}

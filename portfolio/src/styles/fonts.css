@@ -1,0 +1,20 @@
+/*
+ * Display fonts are licensed files that live in /public/fonts.
+ * Drop the files in with exactly these names (see public/fonts/README.md).
+ * Until then the fallbacks in tokens.css are used.
+ */
+@font-face {
+  font-family: 'Botch';
+  src:
+    url('/fonts/Botch.woff2') format('woff2'),
+    url('/fonts/Botch.otf') format('opentype');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Oneheart Script';
+  src:
+    url('/fonts/OneheartScript.woff2') format('woff2'),
+    url('/fonts/OneheartScript.otf') format('opentype');
+  font-display: swap;
+}

@@ -1,0 +1,7 @@
+.layer {
+  position: absolute;
+  inset: 0;
+  z-index: var(--z-canvas);
+  /* The swarm reacts to the pointer through window listeners, so the canvas never blocks clicks. */
+  pointer-events: none;
+}

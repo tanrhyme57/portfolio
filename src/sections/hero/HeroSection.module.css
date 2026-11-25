@@ -1,0 +1,18 @@
+.hero {
+  position: relative;
+  height: 100svh;
+  min-height: 32rem;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+/* The glowing orb replaces the mouse cursor here (links still show a pointer). */
+@media (pointer: fine) {
+  .hero {
+    cursor: none;
+  }
+
+  .hero a {
+    cursor: pointer;
+  }
+}

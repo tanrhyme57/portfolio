@@ -1,0 +1,35 @@
+.root {
+  position: absolute;
+  inset: 0;
+  z-index: var(--z-background);
+  overflow: hidden;
+}
+
+.door {
+  position: absolute;
+  inset: 0;
+  background-image: var(--paper-image);
+  background-size: cover;
+  background-position: center;
+  will-change: transform;
+}
+
+/* Each door shows its side of the image, cut on the fold. */
+.left {
+  clip-path: inset(0 calc(100% - var(--seam-x)) 0 0);
+  transform: translateX(calc(var(--openness) * -1 * var(--seam-x)));
+}
+
+.right {
+  clip-path: inset(0 0 0 var(--seam-x));
+  transform: translateX(calc(var(--openness) * (100% - var(--seam-x))));
+}
+
+/* Soft light falloff so the bots and text sit "on" the paper. */
+.root::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(120% 90% at 50% 40%, transparent 40%, rgb(0 0 0 / 0.45) 100%);
+  pointer-events: none;
+}
