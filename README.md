@@ -39,10 +39,13 @@ src/
   lib/               plain helper functions, no React
   components/        shared UI: Section wrapper, SectionNav (side nav)
   sections/
-    hero/            landing screen
-      HeroSection.tsx      puts the layers together
+    opening/         the scroll-driven opening: hero → paper opens → "experience" + stats
+      OpeningSequence.tsx  puts the layers together, turns scroll into CSS variables
+      timeline.ts          when each part happens (ranges of scroll progress)
+      paper/               the artwork layers: plaster backdrop and the two paper halves
+      experience/          the folded "experience" word and the stats sheet
+    hero/            what is on the first screen
       HeroText/            name, tagline, small label
-      PaperBackground/     paper backdrop split into two "doors" on the fold line
       ScrollCue/           "scroll to open" hint on the fold line
       swarm/               the bots
         config.ts          every tunable number (counts, speeds, glitch)
@@ -55,8 +58,8 @@ src/
         Swarm.tsx          connects all of the above to one instanced mesh
         SwarmCanvas.tsx    the 3D canvas, lights, camera
     placeholder/     stand-ins for sections not built yet
-  assets/            bot model (STL) and paper texture
-public/fonts/        your own display font goes here (see its README)
+  assets/            bot model (STL) and the opening artwork layers
+public/fonts/        Paperfold, and your own display font (see its README)
 ```
 
 The rule of thumb: maths and logic go in plain `.ts` files that know nothing
@@ -71,3 +74,5 @@ about React, so they can be tested; components only wire things together.
   display font goes in `public/fonts/` (see its README).
 - **Bot model:** replace `src/assets/models/bot.stl` (keep it low-poly).
 - **Swarm feel:** `src/sections/hero/swarm/config.ts`.
+- **Opening timing:** `src/sections/opening/timeline.ts`.
+- **Stats:** `src/config/stats.ts` (placeholders for now).

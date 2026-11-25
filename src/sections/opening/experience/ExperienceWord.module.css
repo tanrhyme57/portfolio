@@ -1,0 +1,37 @@
+.word {
+  position: absolute;
+  left: 50%;
+  top: 14%;
+  translate: -50% 0;
+  display: flex;
+  font-family: var(--font-fold);
+  font-weight: 400;
+  font-size: clamp(2.5rem, 11vw, 10rem);
+  line-height: 1;
+  white-space: nowrap;
+  perspective: 900px;
+}
+
+.letter {
+  display: inline-block;
+  /* Cut out of the light paper. */
+  background-image: var(--paper);
+  background-size: 6em;
+  background-position: calc(var(--i) * -0.7em) 0;
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 0.06em 0.05em rgb(0 0 0 / 0.55));
+  transform-origin: 50% 100%;
+
+  /* Each letter gets its own slice of the --word phase. */
+  --span: 0.45;
+  --t: clamp(
+    0,
+    (var(--word) - var(--i) / (var(--letters) - 1) * (1 - var(--span))) / var(--span),
+    1
+  );
+  --e: calc(var(--t) * var(--t) * (3 - 2 * var(--t)));
+  transform: rotateX(calc((1 - var(--e)) * -100deg));
+  opacity: calc(min(1, var(--t) * 4));
+}

@@ -8,10 +8,13 @@ export interface SiteContent {
   tagline: string | null;
   /** Tiny label in the hero corner (Saira). */
   kicker: string;
+  /** Word the paper folds into when the page opens (Paperfold font, lowercase). */
+  revealWord: string;
 }
 
 export const site: SiteContent = {
   name: 'Franciszek Adamski',
   tagline: 'Intentive portfolio',
   kicker: 'Portfolio — 2026',
+  revealWord: 'experience',
 };

@@ -9,6 +9,13 @@
 @import '@fontsource-variable/saira';
 @import '@fontsource/pinyon-script';
 
+/* Paperfold: our folded-paper display font (lowercase, digits, a few marks). */
+@font-face {
+  font-family: 'Paperfold';
+  src: url('/fonts/Paperfold-Regular.woff2') format('woff2');
+  font-display: swap;
+}
+
 /*
 @font-face {
   font-family: 'Display';

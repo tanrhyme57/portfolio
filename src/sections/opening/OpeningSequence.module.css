@@ -1,0 +1,58 @@
+.track {
+  position: relative;
+  height: calc(var(--length) * 100svh);
+}
+
+/* Invisible scroll targets for the side nav, laid over the track. */
+.anchor {
+  position: absolute;
+  left: 0;
+  width: 1px;
+  top: 0;
+  pointer-events: none;
+}
+
+.statsAnchor {
+  height: auto;
+  bottom: 0;
+}
+
+.stage {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  overflow: hidden;
+  isolation: isolate;
+
+  /* Phase variables, overwritten on scroll (see timeline.ts). */
+  --progress: 0;
+  --heroOut: 0;
+  --doors: 0;
+  --word: 0;
+  --stats: 0;
+}
+
+.reveal {
+  position: absolute;
+  inset: 0;
+}
+
+/* Name, bots and cue fade and drift up as the paper starts to open. */
+.hero {
+  position: absolute;
+  inset: 0;
+  opacity: calc(1 - var(--heroOut));
+  translate: 0 calc(var(--heroOut) * -6svh);
+  visibility: visible;
+}
+
+/* The glowing orb replaces the mouse cursor while the bots are around. */
+@media (pointer: fine) {
+  .stage {
+    cursor: none;
+  }
+
+  .stage a {
+    cursor: pointer;
+  }
+}

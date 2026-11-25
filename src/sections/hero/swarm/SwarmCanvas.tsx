@@ -1,19 +1,17 @@
 import { Canvas } from '@react-three/fiber';
-import { Suspense, type RefObject } from 'react';
-import { useInView } from '@/hooks/useInView';
+import { Suspense } from 'react';
 import { useIsCoarsePointer, usePrefersReducedMotion } from '@/hooks/useMediaQuery';
 import { desktopSwarm, touchSwarm } from './config';
 import { Swarm } from './Swarm';
 import styles from './SwarmCanvas.module.css';
 
 interface SwarmCanvasProps {
-  /** The section the canvas sits in; rendering pauses while it is scrolled out of view. */
-  sectionRef: RefObject<HTMLElement | null>;
+  /** Rendering pauses while false (scrolled away or faded out). */
+  active: boolean;
 }
 
 /** Full-bleed, see-through 3D layer for the swarm. Loaded lazily so the text paints first. */
-export default function SwarmCanvas({ sectionRef }: SwarmCanvasProps) {
-  const inView = useInView(sectionRef);
+export default function SwarmCanvas({ active }: SwarmCanvasProps) {
   const reducedMotion = usePrefersReducedMotion();
   const config = useIsCoarsePointer() ? touchSwarm : desktopSwarm;
 
@@ -23,7 +21,7 @@ export default function SwarmCanvas({ sectionRef }: SwarmCanvasProps) {
         dpr={[1, 2]}
         gl={{ alpha: true, antialias: true, powerPreference: 'high-performance' }}
         camera={{ fov: 30, position: [0, 0, 12], near: 0.1, far: 50 }}
-        frameloop={inView ? 'always' : 'never'}
+        frameloop={active ? 'always' : 'never'}
       >
         <ambientLight intensity={0.55} />
         <hemisphereLight args={['#f3ede0', '#2a2a2a', 0.9]} />
