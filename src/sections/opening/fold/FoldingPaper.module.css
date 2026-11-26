@@ -1,0 +1,43 @@
+.root {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  perspective: 1600px;
+  /* Set from JS: artboard px → screen px. */
+  --k: 0.375;
+}
+
+.tile {
+  position: absolute;
+  left: 0;
+  top: 0;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+.front,
+.back {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+}
+
+/* The printed side: this square's crop of its half of the artwork. */
+.front {
+  background-image: var(--door);
+  background-repeat: no-repeat;
+  background-size: calc(var(--door-w) * var(--k) * 1px) auto;
+  background-position: calc(var(--src-x) * var(--k) * -1px) calc(var(--src-y) * var(--k) * -1px);
+  clip-path: var(--clip-front, none);
+}
+
+/* The back of the paper: lighter, like the folded strip in the reference. */
+.back {
+  transform: rotateY(180deg);
+  background-image: var(--light);
+  background-size: 600% 600%;
+  background-position: var(--light-x) var(--light-y);
+  filter: brightness(0.82) contrast(1.05);
+  box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.25);
+  clip-path: var(--clip-back, none);
+}

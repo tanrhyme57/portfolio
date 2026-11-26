@@ -4,7 +4,8 @@
   left: var(--gutter);
   /* Never wider than the screen, so the name cannot be cut off. */
   max-width: calc(100% - 2 * var(--gutter));
-  bottom: clamp(5rem, 16vh, 10rem);
+  /* At the very bottom of the first screen. */
+  bottom: var(--gutter);
   display: grid;
   justify-items: start;
   /* Text sits under the swarm and never blocks it. */
@@ -23,12 +24,13 @@
 }
 
 .name {
-  font-family: var(--font-display);
+  /* Same face as the side nav labels. */
+  font-family: var(--font-ui);
   font-size: var(--text-display);
-  font-weight: 400;
-  line-height: 0.82;
-  letter-spacing: -0.02em;
-  text-transform: lowercase;
+  font-weight: 600;
+  line-height: 0.86;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
   color: var(--color-paper);
   /* A touch of ink bleed. */
   text-shadow: 0 0 0.6px var(--color-paper);
@@ -40,13 +42,13 @@
 }
 
 .tagline {
-  font-family: var(--font-script);
-  font-size: var(--text-script);
+  font-family: var(--font-ui);
+  font-size: var(--text-tagline);
+  font-weight: 500;
   line-height: 1;
+  letter-spacing: var(--tracking-ui);
+  text-transform: uppercase;
   color: var(--color-paper);
   opacity: 0.85;
-  margin-top: var(--space-2);
-  margin-left: 0.6em;
-  transform: rotate(-4deg);
-  transform-origin: left center;
+  margin-top: var(--space-4);
 }

@@ -7,7 +7,7 @@ interface StatsSheetProps {
   stats: readonly Stat[];
 }
 
-/** The big sheet of paper under the word, holding the numbers. Slides up as `--stats` goes 0..1. */
+/** The big sheet of paper under the word, holding the numbers. Slides up as `--stats` goes 0..1, later swings and falls with `--sheet-angle` and `--sheet-drop`. */
 export function StatsSheet({ stats }: StatsSheetProps) {
   return (
     <div className={styles.sheet} style={{ '--paper': `url(${PAPER.light})` } as CSSProperties}>

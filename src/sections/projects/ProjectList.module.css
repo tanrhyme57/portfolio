@@ -1,0 +1,71 @@
+.root {
+  padding: var(--space-6) var(--gutter);
+  background: var(--color-bg);
+  color: var(--color-paper);
+}
+
+.title {
+  font-family: var(--font-fold);
+  font-weight: 400;
+  font-size: clamp(2.5rem, 7vw, 5.5rem);
+  text-transform: lowercase;
+  margin-block-end: var(--space-5);
+}
+
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: var(--space-4);
+  grid-template-columns: repeat(auto-fill, minmax(min(18rem, 100%), 1fr));
+}
+
+.card {
+  height: 100%;
+  padding: var(--space-4);
+  background: var(--color-paper);
+  color: var(--color-ink);
+  display: grid;
+  align-content: start;
+  gap: var(--space-2);
+}
+
+.image {
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+}
+
+.meta,
+.tags {
+  font-size: var(--text-xs);
+  letter-spacing: var(--tracking-ui);
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+
+.name {
+  font-family: var(--font-fold);
+  font-weight: 400;
+  font-size: 1.75rem;
+  text-transform: lowercase;
+}
+
+.summary {
+  font-size: var(--text-sm);
+}
+
+.tags {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.links {
+  display: flex;
+  gap: var(--space-3);
+  font-size: var(--text-sm);
+}

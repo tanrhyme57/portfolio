@@ -12,24 +12,41 @@
   pointer-events: none;
 }
 
-.statsAnchor {
-  height: auto;
-  bottom: 0;
-}
-
 .stage {
   position: sticky;
   top: 0;
   height: 100svh;
   overflow: hidden;
   isolation: isolate;
+  background: var(--gallery-void);
 
   /* Phase variables, overwritten on scroll (see timeline.ts). */
   --progress: 0;
   --heroOut: 0;
-  --doors: 0;
-  --word: 0;
+  --swarmUp: 0;
+  --fold: 0;
   --stats: 0;
+  --backdrop: 1;
+  --sheet-angle: 0deg;
+  --sheet-drop: 0svh;
+}
+
+/* Everything the opening draws. In the gallery it is pinned to a plane in
+   the 3D hallway (perspective on the stage, translateZ here), so the camera
+   walks past the word. */
+.painting {
+  position: absolute;
+  inset: 0;
+  transform-origin: 50% 50%;
+  will-change: transform, opacity;
+}
+
+/* The plaster fades to black as the gallery starts. */
+.backdrop {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  opacity: var(--backdrop);
 }
 
 .reveal {
@@ -37,19 +54,75 @@
   inset: 0;
 }
 
-/* Name, bots and cue fade and drift up as the paper starts to open. */
-.hero {
+/* The name slides off to the left as the paper starts to fold. */
+.name {
   position: absolute;
   inset: 0;
-  opacity: calc(1 - var(--heroOut));
-  translate: 0 calc(var(--heroOut) * -6svh);
-  visibility: visible;
+  pointer-events: none;
+  --e: calc(var(--heroOut) * var(--heroOut));
+  transform: translateX(calc(var(--e) * -110vw));
 }
 
-/* The glowing orb replaces the mouse cursor while the bots are around. */
+/* The bots fade out at the very end of their lift, and stay hidden once
+   their canvas stops drawing (its last frame would otherwise linger). */
+.swarm {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: calc((1 - var(--swarmUp)) * 6);
+}
+
+.stage[data-cursor='scrap'] .swarm {
+  visibility: hidden;
+}
+
+.cue {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: calc(1 - var(--heroOut) * 3);
+}
+
+.cue a {
+  pointer-events: auto;
+}
+
+/* Way out of the gallery walk, shown once in the room or when focused. */
+.skip {
+  position: absolute;
+  left: var(--gutter);
+  bottom: var(--space-4);
+  z-index: var(--z-nav);
+  padding: var(--space-2) var(--space-3);
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-size: var(--text-xs);
+  letter-spacing: var(--tracking-ui);
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: opacity var(--duration-fast) ease;
+}
+
+.stage[data-room='out'] .skip:not(:focus-visible) {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Cursor: the glowing orb stands in for the mouse while the bots are out;
+   once the page has opened, the mouse becomes a torn scrap of paper. */
 @media (pointer: fine) {
-  .stage {
+  .stage[data-cursor='orb'] {
     cursor: none;
+  }
+
+  .stage[data-cursor='scrap'] {
+    cursor:
+      image-set(
+          url('@/assets/cursors/torn-scrap.png') 1x,
+          url('@/assets/cursors/torn-scrap@2x.png') 2x
+        )
+        20 21,
+      auto;
   }
 
   .stage a {

@@ -1,20 +1,24 @@
 /*
- * Display fonts are licensed files that live in /public/fonts.
- * Drop the files in with exactly these names (see public/fonts/README.md).
- * Until then the fallbacks in tokens.css are used.
+ * Fonts. To swap one, change it here and in the --font-* tokens in tokens.css.
+ *
+ * - Saira (nav, name and small text) comes from npm.
+ * - The name uses a stand-in until you have your own display font. Then:
+ *   1. save it as /public/fonts/display.woff2 (see public/fonts/README.md)
+ *   2. uncomment the @font-face below. Nothing else needs to change.
  */
+@import '@fontsource-variable/saira';
+
+/* Paperfold: our folded-paper display font (lowercase, digits, a few marks). */
 @font-face {
-  font-family: 'Botch';
-  src:
-    url('/fonts/Botch.woff2') format('woff2'),
-    url('/fonts/Botch.otf') format('opentype');
+  font-family: 'Paperfold';
+  src: url('/fonts/Paperfold-Regular.woff2') format('woff2');
   font-display: swap;
 }
 
+/*
 @font-face {
-  font-family: 'Oneheart Script';
-  src:
-    url('/fonts/OneheartScript.woff2') format('woff2'),
-    url('/fonts/OneheartScript.otf') format('opentype');
+  font-family: 'Display';
+  src: url('/fonts/display.woff2') format('woff2');
   font-display: swap;
 }
+*/

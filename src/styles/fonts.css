@@ -1,13 +1,12 @@
 /*
  * Fonts. To swap one, change it here and in the --font-* tokens in tokens.css.
  *
- * - Saira (small text) and Pinyon Script (script accents) come from npm.
+ * - Saira (nav, name and small text) comes from npm.
  * - The name uses a stand-in until you have your own display font. Then:
  *   1. save it as /public/fonts/display.woff2 (see public/fonts/README.md)
  *   2. uncomment the @font-face below. Nothing else needs to change.
  */
 @import '@fontsource-variable/saira';
-@import '@fontsource/pinyon-script';
 
 /* Paperfold: our folded-paper display font (lowercase, digits, a few marks). */
 @font-face {

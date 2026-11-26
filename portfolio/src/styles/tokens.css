@@ -5,14 +5,15 @@
  */
 :root {
   /* Type */
-  --font-display: 'Botch', 'Arial Black', 'Helvetica Neue', sans-serif;
-  --font-script: 'Oneheart Script', 'Snell Roundhand', 'Brush Script MT', cursive;
+  /* 'Display' is your own font once it is set up in fonts.css; until then the stand-in after it. */
+  --font-display: 'Display', 'Arial Black', 'Helvetica Neue', sans-serif;
   --font-ui: 'Saira Variable', 'Saira', system-ui, sans-serif;
+  --font-fold: 'Paperfold', var(--font-display);
 
   --text-xs: 0.6875rem;
   --text-sm: 0.8125rem;
   --text-display: clamp(2.75rem, 8.5vw, 8.5rem);
-  --text-script: clamp(1.5rem, 3.4vw, 3rem);
+  --text-tagline: clamp(0.95rem, 1.6vw, 1.35rem);
 
   --tracking-ui: 0.22em;
 
@@ -57,4 +58,13 @@
   --swarm-glitch: var(--color-accent);
   --swarm-flicker: var(--color-paper);
   --swarm-orb: #fff1d6;
+
+  /* 3D gallery greybox (read by its canvas at start-up) */
+  --gallery-void: #000000;
+  --gallery-hall: #121110;
+  --gallery-plaster: #8d887f;
+  --gallery-room: #55514b;
+  --gallery-gold: #c8a24a;
+  --gallery-paper: var(--color-paper);
+  --gallery-slot: #f4f1ea;
 }

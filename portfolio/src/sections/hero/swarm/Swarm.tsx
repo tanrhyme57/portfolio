@@ -1,5 +1,5 @@
 import { useFrame } from '@react-three/fiber';
-import { useMemo, useRef } from 'react';
+import { useMemo, useRef, type RefObject } from 'react';
 import { MathUtils, Object3D, type Group, type InstancedMesh } from 'three';
 import { readSwarmColors, type SwarmColors } from './colors';
 import type { SwarmConfig } from './config';
@@ -14,6 +14,8 @@ import { secondsSince, usePointerTracker } from './usePointerTracker';
 interface SwarmProps {
   config: SwarmConfig;
   reducedMotion: boolean;
+  /** 0..1: the whole swarm, orb and all, is pulled up off the top of the screen. */
+  lift?: RefObject<number>;
 }
 
 /** Longest frame step we simulate, so a background tab does not explode the springs. */
@@ -25,7 +27,7 @@ const MAX_DT = 1 / 30;
  * the pointer and to one instanced mesh, so hundreds of bots cost a single
  * draw call.
  */
-export function Swarm({ config, reducedMotion }: SwarmProps) {
+export function Swarm({ config, reducedMotion, lift }: SwarmProps) {
   const geometry = useBotGeometry();
   const meshRef = useRef<InstancedMesh>(null);
   const pointer = usePointerTracker();
@@ -37,6 +39,7 @@ export function Swarm({ config, reducedMotion }: SwarmProps) {
   const top = useRef<{ x: number; y: number } | null>(null);
   const orbPosition = useRef<{ x: number; y: number } | null>(null);
   const orbRef = useRef<Group>(null);
+  const rig = useRef<Group>(null);
   const palette = useRef<SwarmColors | null>(null);
   const dummy = useMemo(() => new Object3D(), []);
 
@@ -52,6 +55,10 @@ export function Swarm({ config, reducedMotion }: SwarmProps) {
     const botSize = config.botSize * height;
     // The structure hangs from just above the top edge, where the bots drop in from.
     const ceilingY = height / 2 + botSize * 0.3;
+
+    // Scrolling away: everything retracts up through the top edge.
+    const lifted = MathUtils.smootherstep(lift?.current ?? 0, 0, 1);
+    rig.current?.position.setY(lifted * height * 1.4);
 
     // 1. The orb follows the pointer; the column hangs down and grips it from above.
     const rect = gl.domElement.getBoundingClientRect();
@@ -135,7 +142,7 @@ export function Swarm({ config, reducedMotion }: SwarmProps) {
       const tumble =
         entering && !reducedMotion ? (1 - age / config.entry.stutterDuration) * 2.4 : 0;
       dummy.rotation.set(
-        MathUtils.clamp(vy * 0.5, -0.7, 0.7) + tumble * Math.sin(i),
+        slots.pitch[i]! + MathUtils.clamp(vy * 0.5, -0.7, 0.7) + tumble * Math.sin(i),
         slots.yaw[i]! + wobble,
         MathUtils.clamp(-vx * 0.6, -0.7, 0.7) + tumble * Math.cos(i),
         'YXZ',
@@ -158,12 +165,12 @@ export function Swarm({ config, reducedMotion }: SwarmProps) {
   });
 
   return (
-    <>
+    <group ref={rig}>
       <Orb ref={orbRef} />
       <instancedMesh ref={meshRef} args={[geometry, undefined, config.count]} frustumCulled={false}>
         <instancedBufferAttribute attach="instanceColor" args={[instanceColors, 3]} />
         <meshStandardMaterial color="#ffffff" roughness={0.5} metalness={0.35} flatShading />
       </instancedMesh>
-    </>
+    </group>
   );
 }

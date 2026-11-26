@@ -11,6 +11,14 @@
   text-decoration: none;
 }
 
+/* On tall screens the name fills the bottom, so the cue moves up under the swarm. */
+@media (max-aspect-ratio: 1 / 1) {
+  .root {
+    bottom: auto;
+    top: 56%;
+  }
+}
+
 .label {
   font-family: var(--font-ui);
   font-size: var(--text-xs);

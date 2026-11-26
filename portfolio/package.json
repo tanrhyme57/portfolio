@@ -14,6 +14,7 @@
   },
   "dependencies": {
     "@fontsource-variable/saira": "^5.3.0",
+    "@fontsource/pinyon-script": "^5.3.0",
     "@react-three/fiber": "^9.8.2",
     "react": "^19.3.1",
     "react-dom": "^19.3.1",

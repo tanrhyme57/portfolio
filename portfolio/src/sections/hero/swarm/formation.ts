@@ -7,6 +7,8 @@ export interface Slots {
   readonly position: Float32Array;
   /** Rotation around the vertical axis per bot, radians. */
   readonly yaw: Float32Array;
+  /** Forward tilt per bot, radians. Bots in the mass tilt so their broad side faces out. */
+  readonly pitch: Float32Array;
   /** 0 for the bots holding the orb, up to 1 for the mass at the anchor. Drives stiffness. */
   readonly weight: Float32Array;
   /** Number of bots that are part of the column this frame (the rest are in the mass). */
@@ -35,6 +37,7 @@ export function createSlots(count: number): Slots {
     count,
     position: new Float32Array(count * 3),
     yaw: new Float32Array(count),
+    pitch: new Float32Array(count),
     weight: new Float32Array(count),
     columnCount: 0,
   };
@@ -122,28 +125,31 @@ export function computeFormation(out: Slots, input: FormationInput, config: Swar
       out.position[i * 3 + 2] = Math.sin(angle) * radius * wobble * depthScale;
       // Long axis along the ring, like bricks in a round wall.
       out.yaw[i] = -angle - Math.PI / 2;
+      out.pitch[i] = 0;
       out.weight[i] = along;
     }
   }
   out.columnCount = i;
 
-  // Everyone else: a mass spreading along the anchor edge. Most bots sit
-  // close to the column's root and the mass thins out sideways, so the
-  // column flows into it without a gap.
+  // Everyone else: a thick blanket of bots along the anchor edge, spanning
+  // the whole width. It is thickest at the column's root so the column grows
+  // out of it without a seam, and never thinner than `pool.edge` so no
+  // background shows between the bots and the edge.
   const rootRadius = ringRadius(lastRow * column.rowSpacing, column) * s;
-  for (; i < out.count; i++) {
-    // Each bot's spot depends only on its index, so the mass does not
-    // reshuffle when the column grows or shrinks.
-    const side = fract(i * 0.618034) * 2 - 1; // -1..1, left to right
-    const reach = Math.pow(Math.abs(side), 1.6);
-    const crawl = Math.sin(time * pool.spin * (0.6 + fract(i * 0.29)) + i * 1.7) * s * 0.8;
-    const thickness = Math.pow(1 - reach, 1.3) * pool.mound * (0.3 + 0.7 * fract(i * 0.381966));
-    out.position[i * 3] =
-      tipX + Math.sign(side) * (rootRadius * 0.5 + reach * pool.spread * s) + crawl;
-    out.position[i * 3 + 1] = anchorY - direction * thickness * s;
-    out.position[i * 3 + 2] =
-      (fract(i * 0.7548776) - 0.5) * 2 * (rootRadius + s) * pool.depthScale * (1 - reach * 0.6);
+  const massCount = out.count - out.columnCount;
+  for (let k = 0; i < out.count; i++, k++) {
+    // Spots are spread evenly (stratified) so there are no holes, and depend
+    // only on the bot's index so the mass does not reshuffle.
+    const side = ((k + 0.5) / massCount) * 2 - 1; // -1..1, left to right
+    const order = fract(i * 0.618034);
+    const reach = Math.abs(side);
+    const thickness = (pool.edge + (pool.mound - pool.edge) * Math.pow(1 - reach, 2)) * s;
+    const crawl = Math.sin(time * pool.spin * (0.6 + fract(i * 0.29)) + i * 1.7) * s * 0.5;
+    out.position[i * 3] = tipX * (1 - reach) + side * (rootRadius + pool.spread * s) + crawl;
+    out.position[i * 3 + 1] = anchorY - direction * order * thickness;
+    out.position[i * 3 + 2] = (fract(i * 0.7548776) - 0.5) * 2 * (rootRadius + s) * pool.depthScale;
     out.yaw[i] = i * GOLDEN_ANGLE + time * pool.spin * 0.3;
+    out.pitch[i] = (i % 2 === 0 ? 1 : -1) * (0.9 + 0.6 * fract(i * 0.381966));
     out.weight[i] = 1;
   }
 }

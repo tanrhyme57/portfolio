@@ -42,8 +42,18 @@ src/
     opening/         the scroll-driven opening: hero → paper opens → "experience" + stats
       OpeningSequence.tsx  puts the layers together, turns scroll into CSS variables
       timeline.ts          when each part happens (ranges of scroll progress)
-      paper/               the artwork layers: plaster backdrop and the two paper halves
-      experience/          the folded "experience" word and the stats sheet
+      track.ts             how the opening and the gallery share one scroll track
+      paper/               the artwork layers (plaster backdrop, paper halves)
+      fold/                the paper squares folding into "experience" (choreography.ts = the maths)
+      experience/          the stats sheet
+    gallery/         after the stats: the black hallway past "experience", stairs and illusion room (greybox)
+      dimensions.ts        every size and position in metres; tune the blockout here
+      beats.ts             when each camera move and hold happens
+      handoff.ts           plaster fades, stats sheet falls, word pinned into the 3D hallway (no three.js)
+      cameraPath.ts        the camera's walk, scrubbed by scroll (pure maths, tested)
+      illusion.ts          forced perspective: the flat "projects" drawing, scattered in depth
+      scene/               the boxes: hallway, stairs, illusion pieces, room
+    projects/        the plain "All projects" list (always there, also the no-3D fallback)
     hero/            what is on the first screen
       HeroText/            name, tagline, small label
       ScrollCue/           "scroll to open" hint on the fold line
@@ -60,6 +70,7 @@ src/
     placeholder/     stand-ins for sections not built yet
   assets/            bot model (STL) and the opening artwork layers
 public/fonts/        Paperfold, and your own display font (see its README)
+tools/paperfold/     Paperfold font source and the letter-to-squares generator
 ```
 
 The rule of thumb: maths and logic go in plain `.ts` files that know nothing
@@ -76,3 +87,5 @@ about React, so they can be tested; components only wire things together.
 - **Swarm feel:** `src/sections/hero/swarm/config.ts`.
 - **Opening timing:** `src/sections/opening/timeline.ts`.
 - **Stats:** `src/config/stats.ts` (placeholders for now).
+- **Projects:** `src/config/projects.ts` (placeholders; the first six hang in the gallery).
+- **Gallery timing / layout:** `src/sections/gallery/beats.ts` and `dimensions.ts`.

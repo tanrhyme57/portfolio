@@ -38,6 +38,8 @@ export interface SwarmConfig {
     spin: number;
     /** Thickness of the mass at the column's root, in bot lengths. */
     mound: number;
+    /** Thickness of the mass at the screen's sides, in bot lengths. */
+    edge: number;
     /** Depth of the mass relative to the column's root. */
     depthScale: number;
   };
@@ -123,7 +125,7 @@ export interface SwarmConfig {
 }
 
 export const desktopSwarm: SwarmConfig = {
-  count: 1500,
+  count: 1800,
   botSize: 0.04,
   column: {
     rowSpacing: 0.2,
@@ -134,9 +136,9 @@ export const desktopSwarm: SwarmConfig = {
     minRing: 3,
     twist: 0.62,
     spin: 0.35,
-    minPoolShare: 0.25,
+    minPoolShare: 0.3,
   },
-  pool: { spread: 16, spin: 0.9, mound: 5, depthScale: 0.7 },
+  pool: { spread: 28, spin: 0.9, mound: 6, edge: 2.2, depthScale: 0.35 },
   depthScale: 0.8,
   motion: {
     pulse: 0.28,
@@ -178,8 +180,8 @@ export const desktopSwarm: SwarmConfig = {
 /** Phones and tablets: fewer, bigger bots. */
 export const touchSwarm: SwarmConfig = {
   ...desktopSwarm,
-  count: 800,
+  count: 950,
   botSize: 0.05,
-  pool: { ...desktopSwarm.pool, spread: 8 },
+  pool: { ...desktopSwarm.pool, spread: 12 },
   orb: { ...desktopSwarm.orb, radiusPx: 14 },
 };

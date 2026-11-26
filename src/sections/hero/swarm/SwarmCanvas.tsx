@@ -1,5 +1,5 @@
 import { Canvas } from '@react-three/fiber';
-import { Suspense } from 'react';
+import { Suspense, type RefObject } from 'react';
 import { useIsCoarsePointer, usePrefersReducedMotion } from '@/hooks/useMediaQuery';
 import { desktopSwarm, touchSwarm } from './config';
 import { Swarm } from './Swarm';
@@ -8,10 +8,12 @@ import styles from './SwarmCanvas.module.css';
 interface SwarmCanvasProps {
   /** Rendering pauses while false (scrolled away or faded out). */
   active: boolean;
+  /** 0..1, read every frame: pulls the swarm up off the top of the screen. */
+  lift?: RefObject<number>;
 }
 
 /** Full-bleed, see-through 3D layer for the swarm. Loaded lazily so the text paints first. */
-export default function SwarmCanvas({ active }: SwarmCanvasProps) {
+export default function SwarmCanvas({ active, lift }: SwarmCanvasProps) {
   const reducedMotion = usePrefersReducedMotion();
   const config = useIsCoarsePointer() ? touchSwarm : desktopSwarm;
 
@@ -28,7 +30,7 @@ export default function SwarmCanvas({ active }: SwarmCanvasProps) {
         <directionalLight position={[-4, 6, 5]} intensity={2.4} color="#fff3e2" />
         <directionalLight position={[5, 1, -4]} intensity={1.4} color="#c9d4ff" />
         <Suspense fallback={null}>
-          <Swarm key={config.count} config={config} reducedMotion={reducedMotion} />
+          <Swarm key={config.count} config={config} reducedMotion={reducedMotion} lift={lift} />
         </Suspense>
       </Canvas>
     </div>

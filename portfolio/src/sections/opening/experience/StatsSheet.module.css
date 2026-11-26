@@ -1,0 +1,47 @@
+.sheet {
+  position: absolute;
+  left: 50%;
+  top: 38%;
+  width: min(100% - 2 * var(--gutter), 64rem);
+  padding: clamp(1.5rem, 4vw, 3.5rem);
+  background: var(--paper) center / cover;
+  color: var(--color-ink);
+  box-shadow:
+    0 1.5rem 3rem rgb(0 0 0 / 0.55),
+    0 0.2rem 0.5rem rgb(0 0 0 / 0.4);
+
+  --e: calc(var(--stats) * var(--stats) * (3 - 2 * var(--stats)));
+  /* Top-left corner: the sheet later swings from it and falls (gallery hand-off). */
+  transform-origin: 0 0;
+  transform: translateX(-50%) translateY(calc((1 - var(--e)) * 70svh))
+    rotateX(calc((1 - var(--e)) * 55deg)) translateY(var(--sheet-drop, 0svh))
+    rotate(var(--sheet-angle, 0deg));
+  opacity: calc(min(1, var(--stats) * 3));
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(8.5rem, 100%), 1fr));
+  gap: clamp(1.25rem, 3vw, 2.5rem);
+}
+
+.stat {
+  display: grid;
+  gap: var(--space-2);
+  border-top: 2px solid var(--color-ink);
+  padding-top: var(--space-3);
+}
+
+.label {
+  font-family: var(--font-ui);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: var(--tracking-ui);
+  text-transform: uppercase;
+}
+
+.value {
+  font-family: var(--font-fold);
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
+  line-height: 1;
+}

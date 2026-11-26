@@ -11,9 +11,11 @@
     0 0.2rem 0.5rem rgb(0 0 0 / 0.4);
 
   --e: calc(var(--stats) * var(--stats) * (3 - 2 * var(--stats)));
-  transform-origin: 50% 0%;
+  /* Top-left corner: the sheet later swings from it and falls (gallery hand-off). */
+  transform-origin: 0 0;
   transform: translateX(-50%) translateY(calc((1 - var(--e)) * 70svh))
-    rotateX(calc((1 - var(--e)) * 55deg));
+    rotateX(calc((1 - var(--e)) * 55deg)) translateY(var(--sheet-drop, 0svh))
+    rotate(var(--sheet-angle, 0deg));
   opacity: calc(min(1, var(--stats) * 3));
 }
 

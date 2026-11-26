@@ -4,7 +4,7 @@
 export interface SiteContent {
   /** Name shown big in the hero (display font), one word per line. */
   name: string;
-  /** Short script line under the name (Pinyon Script). Set to `null` to hide it. */
+  /** Short line under the name, in the nav font. Set to `null` to hide it. */
   tagline: string | null;
   /** Tiny label in the hero corner (Saira). */
   kicker: string;

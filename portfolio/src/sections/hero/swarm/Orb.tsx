@@ -9,7 +9,7 @@ import {
   type PointLight,
   type SpriteMaterial,
 } from 'three';
-import { readCssColor } from './colors';
+import { readCssColor } from '@/lib/cssColor';
 
 interface OrbProps {
   /** The parent moves and scales this group every frame (scale = radius). */
