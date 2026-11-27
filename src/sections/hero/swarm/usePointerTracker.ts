@@ -10,7 +10,12 @@ export interface PointerSnapshot {
   engaged: boolean;
   /** `performance.now()` in seconds when it last stopped being engaged. */
   releasedAt: number;
+  /** Over something clickable, or the mouse button is down. */
+  pointing: boolean;
 }
+
+/** What counts as clickable for the cursor's pointing pose. */
+const CLICKABLE = 'a[href], button, [role="button"], label, select, summary, input, textarea';
 
 const nowSeconds = () => performance.now() / 1000;
 
@@ -28,6 +33,7 @@ export function usePointerTracker(): RefObject<PointerSnapshot> {
     kind: 'mouse',
     engaged: false,
     releasedAt: -Infinity,
+    pointing: false,
   });
 
   useEffect(() => {
@@ -61,7 +67,29 @@ export function usePointerTracker(): RefObject<PointerSnapshot> {
       if (event.relatedTarget === null) release();
     };
 
+    let overClickable = false;
+    let pressed = false;
+    const updatePointing = () => {
+      state.pointing = overClickable || pressed;
+    };
+    const onPointerOver = (event: PointerEvent) => {
+      overClickable = event.target instanceof Element && event.target.closest(CLICKABLE) !== null;
+      updatePointing();
+    };
+    const onPointerDown = (event: PointerEvent) => {
+      if (event.pointerType === 'touch') return;
+      pressed = true;
+      updatePointing();
+    };
+    const onPointerUp = () => {
+      pressed = false;
+      updatePointing();
+    };
+
     const passive = { passive: true } as const;
+    window.addEventListener('pointerover', onPointerOver, passive);
+    window.addEventListener('pointerdown', onPointerDown, passive);
+    window.addEventListener('pointerup', onPointerUp, passive);
     window.addEventListener('pointermove', onPointerMove, passive);
     window.addEventListener('touchstart', onTouch, passive);
     window.addEventListener('touchmove', onTouch, passive);
@@ -71,6 +99,9 @@ export function usePointerTracker(): RefObject<PointerSnapshot> {
     window.addEventListener('blur', release);
 
     return () => {
+      window.removeEventListener('pointerover', onPointerOver);
+      window.removeEventListener('pointerdown', onPointerDown);
+      window.removeEventListener('pointerup', onPointerUp);
       window.removeEventListener('pointermove', onPointerMove);
       window.removeEventListener('touchstart', onTouch);
       window.removeEventListener('touchmove', onTouch);

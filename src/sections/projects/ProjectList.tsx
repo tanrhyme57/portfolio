@@ -49,6 +49,13 @@ export function ProjectList({ id, projects }: ProjectListProps) {
           </li>
         ))}
       </ol>
+      <p className={styles.credits}>
+        Gallery frame:{' '}
+        <a href="https://sketchfab.com/3d-models/picture-frame-1806fe6b8d96461887f21ec3cb9c4878">
+          “Picture Frame”
+        </a>{' '}
+        by Olivia Bultinck, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>.
+      </p>
     </Section>
   );
 }

@@ -26,7 +26,6 @@
   --swarmUp: 0;
   --fold: 0;
   --stats: 0;
-  --backdrop: 1;
   --sheet-angle: 0deg;
   --sheet-drop: 0svh;
 }
@@ -39,14 +38,6 @@
   inset: 0;
   transform-origin: 50% 50%;
   will-change: transform, opacity;
-}
-
-/* The plaster fades to black as the gallery starts. */
-.backdrop {
-  position: absolute;
-  inset: 0;
-  overflow: hidden;
-  opacity: var(--backdrop);
 }
 
 .reveal {
@@ -64,10 +55,12 @@
 }
 
 /* The bots fade out at the very end of their lift, and stay hidden once
-   their canvas stops drawing (its last frame would otherwise linger). */
+   their canvas stops drawing (its last frame would otherwise linger). They sit
+   above the scroll cue, since the figure they hold is the cursor. */
 .swarm {
   position: absolute;
   inset: 0;
+  z-index: calc(var(--z-nav) + 1);
   pointer-events: none;
   opacity: calc((1 - var(--swarmUp)) * 6);
 }
@@ -108,10 +101,15 @@
   pointer-events: none;
 }
 
-/* Cursor: the glowing orb stands in for the mouse while the bots are out;
-   once the page has opened, the mouse becomes a torn scrap of paper. */
+/* Cursor: the bots' paper figure stands in for the mouse while they are out
+   (his pointing pose covers links);
+   once the page has opened, the mouse becomes a torn scrap of paper, and
+   after the wipe a monocle (MonocleCursor) that warps what it looks at. */
 @media (pointer: fine) {
-  .stage[data-cursor='orb'] {
+  .stage[data-cursor='figure'],
+  .stage[data-cursor='figure'] a,
+  .stage[data-cursor='monocle'],
+  .stage[data-cursor='monocle'] a {
     cursor: none;
   }
 
@@ -125,7 +123,7 @@
       auto;
   }
 
-  .stage a {
+  .stage[data-cursor='scrap'] a {
     cursor: pointer;
   }
 }

@@ -4,8 +4,8 @@ import { BEATS } from './beats';
 import { LAYOUT } from './dimensions';
 
 /**
- * The hand-off from the HTML opening to the 3D gallery. The plaster fades to
- * black, the stats sheet swings off its top-left corner and falls, and the
+ * The hand-off from the HTML opening to the 3D gallery. A hand wipes the
+ * plaster to black (opening/wipe), the stats sheet swings off its top-left corner and falls, and the
  * HTML word "experience" is pinned to a plane in the 3D hallway, so the
  * camera walks past it. Kept free of three.js so the page can run it before
  * the gallery loads.
@@ -21,11 +21,6 @@ export const HALLWAY_KEYS: readonly { at: number; z: number }[] = [
 export function cameraZAt(progress: number): number {
   const [start, end] = HALLWAY_KEYS as [(typeof HALLWAY_KEYS)[0], (typeof HALLWAY_KEYS)[0]];
   return start.z + (end.z - start.z) * smootherstep(progress, start.at, end.at);
-}
-
-/** How opaque the plaster backdrop still is. */
-export function backdropOpacity(progress: number): number {
-  return 1 - smootherstep(progress, ...BEATS.darken);
 }
 
 /** Largest swing of the stats sheet about its top-left corner, in degrees. */

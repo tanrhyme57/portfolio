@@ -22,6 +22,11 @@ export function useGalleryMaterials() {
       black: new MeshBasicMaterial({ color: color('--gallery-void', '#000000') }),
       hall: new MeshStandardMaterial({ color: color('--gallery-hall', '#121110'), roughness: 1 }),
       room: new MeshStandardMaterial({ color: color('--gallery-room', '#55514b'), roughness: 0.9 }),
+      /** The gallery room's walls. */
+      wall: new MeshStandardMaterial({
+        color: color('--gallery-wall', '#f1eee8'),
+        roughness: 0.92,
+      }),
       gold: new MeshStandardMaterial({
         color: color('--gallery-gold', '#c8a24a'),
         metalness: 0.55,

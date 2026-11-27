@@ -6,7 +6,7 @@ import type { SwarmConfig } from './config';
 import { computeFormation, createSlots } from './formation';
 import { createGlitchState, glitchShift, updateGlitch } from './glitch';
 import { idleTarget } from './idlePath';
-import { Orb } from './Orb';
+import { Figure } from './Figure';
 import { createSwarmState, stepSwarm, twitchSwarm, type SwarmState } from './simulation';
 import { useBotGeometry } from './useBotGeometry';
 import { secondsSince, usePointerTracker } from './usePointerTracker';
@@ -14,7 +14,7 @@ import { secondsSince, usePointerTracker } from './usePointerTracker';
 interface SwarmProps {
   config: SwarmConfig;
   reducedMotion: boolean;
-  /** 0..1: the whole swarm, orb and all, is pulled up off the top of the screen. */
+  /** 0..1: the whole swarm, figure and all, is pulled up off the top of the screen. */
   lift?: RefObject<number>;
 }
 
@@ -22,7 +22,7 @@ interface SwarmProps {
 const MAX_DT = 1 / 30;
 
 /**
- * The bot swarm and the orb they hold up. All the maths lives in plain
+ * The bot swarm and the paper figure they hold up by his feet. All the maths lives in plain
  * modules (formation, simulation, glitch); this component only wires them to
  * the pointer and to one instanced mesh, so hundreds of bots cost a single
  * draw call.
@@ -37,8 +37,8 @@ export function Swarm({ config, reducedMotion, lift }: SwarmProps) {
   const swarm = useRef<SwarmState | null>(null);
   const glitch = useRef(createGlitchState(config.entry.delay + config.entry.stagger));
   const top = useRef<{ x: number; y: number } | null>(null);
-  const orbPosition = useRef<{ x: number; y: number } | null>(null);
-  const orbRef = useRef<Group>(null);
+  const figurePosition = useRef<{ x: number; y: number } | null>(null);
+  const figureRef = useRef<Group>(null);
   const rig = useRef<Group>(null);
   const palette = useRef<SwarmColors | null>(null);
   const dummy = useMemo(() => new Object3D(), []);
@@ -60,11 +60,11 @@ export function Swarm({ config, reducedMotion, lift }: SwarmProps) {
     const lifted = MathUtils.smootherstep(lift?.current ?? 0, 0, 1);
     rig.current?.position.setY(lifted * height * 1.4);
 
-    // 1. The orb follows the pointer; the column hangs down and grips it from above.
+    // 1. The figure's head follows the pointer; the column hangs down and holds his feet.
     const rect = gl.domElement.getBoundingClientRect();
     const worldPerPx = height / rect.height;
-    const orbRadius = config.orb.radiusPx * worldPerPx;
-    const grip = orbRadius * 0.6; // how far above the orb's centre the tip ring sits
+    const figureHeight = config.figure.heightPx * worldPerPx;
+    const grip = figureHeight * 0.92; // how far above his head the tip ring sits (at his feet)
     const p = pointer.current;
     const insideCanvas =
       p.clientX >= rect.left &&
@@ -76,22 +76,22 @@ export function Swarm({ config, reducedMotion, lift }: SwarmProps) {
 
     const wander = idleTarget(reducedMotion ? 0 : time);
     const tip = (top.current ??= { x: (wander.x * width) / 2, y: (wander.y * height) / 2 });
-    const orb = (orbPosition.current ??= { x: tip.x, y: tip.y - grip });
+    const figure = (figurePosition.current ??= { x: tip.x, y: tip.y - grip });
     const highestTipY = ceilingY - botSize * 2;
 
     let goalX = tip.x;
     let goalY = tip.y;
     let rate = config.follow.idle;
     if (following) {
-      // The orb sticks to the pointer; the column chases it.
+      // His head sticks to the pointer; the column chases it.
       const [offsetX, offsetY] = config.pointerOffset[p.kind];
-      orb.x = (p.clientX - rect.left + offsetX) * worldPerPx - width / 2;
-      orb.y = Math.min(
+      figure.x = (p.clientX - rect.left + offsetX) * worldPerPx - width / 2;
+      figure.y = Math.min(
         height / 2 - (p.clientY - rect.top + offsetY) * worldPerPx,
         highestTipY - grip,
       );
-      goalX = orb.x;
-      goalY = orb.y + grip;
+      goalX = figure.x;
+      goalY = figure.y + grip;
       rate = config.follow.pointer;
     } else if (wandering) {
       goalX = (wander.x * width) / 2;
@@ -102,13 +102,13 @@ export function Swarm({ config, reducedMotion, lift }: SwarmProps) {
     tip.x += (goalX - tip.x) * blend;
     tip.y += (goalY - tip.y) * blend;
     if (!following) {
-      // Nobody is holding it: the orb settles back into the column's grip.
-      const settle = 1 - Math.exp(-config.orb.settle * dt);
-      orb.x += (tip.x - orb.x) * settle;
-      orb.y += (tip.y - grip - orb.y) * settle;
+      // Nobody is steering: he settles back under the column's grip.
+      const settle = 1 - Math.exp(-config.figure.settle * dt);
+      figure.x += (tip.x - figure.x) * settle;
+      figure.y += (tip.y - grip - figure.y) * settle;
     }
-    orbRef.current?.position.set(orb.x, orb.y, 0);
-    orbRef.current?.scale.setScalar(orbRadius);
+    figureRef.current?.position.set(figure.x, figure.y, 0);
+    figureRef.current?.scale.setScalar(figureHeight);
 
     // 2. Targets for every bot, then move them.
     const motionTime = reducedMotion ? 0 : time;
@@ -166,7 +166,7 @@ export function Swarm({ config, reducedMotion, lift }: SwarmProps) {
 
   return (
     <group ref={rig}>
-      <Orb ref={orbRef} />
+      <Figure ref={figureRef} pointer={pointer} />
       <instancedMesh ref={meshRef} args={[geometry, undefined, config.count]} frustumCulled={false}>
         <instancedBufferAttribute attach="instanceColor" args={[instanceColors, 3]} />
         <meshStandardMaterial color="#ffffff" roughness={0.5} metalness={0.35} flatShading />

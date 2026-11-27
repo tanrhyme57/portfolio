@@ -11,7 +11,7 @@ export const TIMELINE = {
   scroll: 3.2,
   /** The name slides off to the left and the scroll cue fades. */
   heroOut: [0, 0.1],
-  /** The bots pull back up through the top edge, taking the orb with them. */
+  /** The bots pull back up through the top edge, taking the figure with them. */
   swarmUp: [0, 0.14],
   /**
    * The paper folds square by square into the word while the rest of the

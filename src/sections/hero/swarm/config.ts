@@ -16,7 +16,7 @@ export interface SwarmConfig {
     rowSpacing: number;
     /** Distance between neighbours on a ring, in bot lengths. */
     ringSpacing: number;
-    /** Radius of the ring holding the orb, in bot lengths. */
+    /** Radius of the ring holding the figure's feet, in bot lengths. */
     topRadius: number;
     /** How fast the column widens towards the edge it grows from. */
     flare: number;
@@ -103,17 +103,17 @@ export interface SwarmConfig {
     flickerChance: number;
   };
 
-  /** The glowing orb that replaces the cursor and rests on the column. */
-  orb: {
-    /** Radius in CSS px. */
-    radiusPx: number;
-    /** How quickly it settles back onto the column when nobody holds it (1/s). */
+  /** The paper figure that replaces the cursor, hanging head down from the column. */
+  figure: {
+    /** Height in CSS px, feet to head. */
+    heightPx: number;
+    /** How quickly he settles back onto the column when nobody holds him (1/s). */
     settle: number;
   };
 
   /**
-   * Where the orb sits relative to the pointer, in CSS px (x right, y down).
-   * On touch it floats above the finger so the finger does not hide it.
+   * Where the figure's head sits relative to the pointer, in CSS px (x right, y down).
+   * On touch he hangs above the finger so the finger does not hide him.
    */
   pointerOffset: { mouse: [number, number]; touch: [number, number] };
 
@@ -171,7 +171,7 @@ export const desktopSwarm: SwarmConfig = {
     shift: 1.4,
     flickerChance: 0.0006,
   },
-  orb: { radiusPx: 11, settle: 8 },
+  figure: { heightPx: 64, settle: 8 },
   pointerOffset: { mouse: [0, 0], touch: [0, -70] },
   idleDelay: { mouse: 2.5, touch: 1.2 },
   follow: { pointer: 22, idle: 2.2 },
@@ -183,5 +183,5 @@ export const touchSwarm: SwarmConfig = {
   count: 950,
   botSize: 0.05,
   pool: { ...desktopSwarm.pool, spread: 12 },
-  orb: { ...desktopSwarm.orb, radiusPx: 14 },
+  figure: { ...desktopSwarm.figure, heightPx: 76 },
 };

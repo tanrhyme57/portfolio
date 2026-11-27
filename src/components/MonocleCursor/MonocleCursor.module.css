@@ -1,0 +1,34 @@
+.root {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: calc(var(--z-nav) + 2);
+  pointer-events: none;
+  opacity: 0; /* until the mouse first moves */
+  will-change: transform;
+}
+
+.defs {
+  position: absolute;
+}
+
+/* The glass: warps whatever is behind it, with a faint sheen. */
+.lens {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 35% 30%,
+    rgb(255 255 255 / 0.16),
+    rgb(255 255 255 / 0.03) 45%,
+    transparent 70%
+  );
+}
+
+.frame {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: auto;
+  filter: drop-shadow(0 0.4rem 0.6rem rgb(0 0 0 / 0.5));
+  user-select: none;
+}

@@ -9,14 +9,14 @@ export interface Slots {
   readonly yaw: Float32Array;
   /** Forward tilt per bot, radians. Bots in the mass tilt so their broad side faces out. */
   readonly pitch: Float32Array;
-  /** 0 for the bots holding the orb, up to 1 for the mass at the anchor. Drives stiffness. */
+  /** 0 for the bots holding the figure, up to 1 for the mass at the anchor. Drives stiffness. */
   readonly weight: Float32Array;
   /** Number of bots that are part of the column this frame (the rest are in the mass). */
   columnCount: number;
 }
 
 export interface FormationInput {
-  /** The column's free end, right at the orb. World units. */
+  /** The column's free end, right at the figure's feet. World units. */
   tipX: number;
   tipY: number;
   /**
@@ -80,11 +80,11 @@ function ringRadius(depth: number, column: SwarmConfig['column']): number {
 
 /**
  * Fills `out` with the target for every bot: a flared, writhing column of
- * rings from the anchor edge to the orb, with the leftover bots in a
+ * rings from the anchor edge to the figure, with the leftover bots in a
  * crawling mass along the anchor edge that the column grows out of.
  *
  * Bot i always gets slot i, and slots are numbered from the tip. So the bots
- * holding the orb never change, and when the column gets longer the extra
+ * holding the figure never change, and when the column gets longer the extra
  * bots come out of the mass.
  */
 export function computeFormation(out: Slots, input: FormationInput, config: SwarmConfig): void {

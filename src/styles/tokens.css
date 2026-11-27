@@ -8,6 +8,7 @@
   /* 'Display' is your own font once it is set up in fonts.css; until then the stand-in after it. */
   --font-display: 'Display', 'Arial Black', 'Helvetica Neue', sans-serif;
   --font-ui: 'Saira Variable', 'Saira', system-ui, sans-serif;
+  --font-name: 'Archivo Variable', 'Arial Black', sans-serif;
   --font-fold: 'Paperfold', var(--font-display);
 
   --text-xs: 0.6875rem;
@@ -57,13 +58,14 @@
   --swarm-bot: #161616;
   --swarm-glitch: var(--color-accent);
   --swarm-flicker: var(--color-paper);
-  --swarm-orb: #fff1d6;
+  --swarm-glow: #fff1d6;
 
   /* 3D gallery greybox (read by its canvas at start-up) */
   --gallery-void: #000000;
   --gallery-hall: #121110;
   --gallery-plaster: #8d887f;
   --gallery-room: #55514b;
+  --gallery-wall: #f1eee8;
   --gallery-gold: #c8a24a;
   --gallery-paper: var(--color-paper);
   --gallery-slot: #f4f1ea;

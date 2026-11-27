@@ -1,22 +1,18 @@
-import { Suspense, useCallback, useMemo, useRef, type CSSProperties } from 'react';
+import { Suspense, useCallback, useEffect, useMemo, useRef, type CSSProperties } from 'react';
+import { MonocleCursor } from '@/components/MonocleCursor';
 import { site } from '@/config/site';
 import { stats } from '@/config/stats';
 import { useInView } from '@/hooks/useInView';
 import { useMediaQuery, usePrefersReducedMotion } from '@/hooks/useMediaQuery';
+import { useElementSize } from '@/hooks/useElementSize';
 import { useScrollProgress } from '@/hooks/useScrollProgress';
 import { phase } from '@/lib/scrollProgress';
-import {
-  backdropOpacity,
-  BEATS,
-  cameraZAt,
-  GalleryCanvas,
-  sheetFall,
-  wordView,
-} from '@/sections/gallery';
+import { BEATS, cameraZAt, GalleryCanvas, sheetFall, wordView } from '@/sections/gallery';
 import { HeroText, ScrollCue, SwarmCanvas } from '@/sections/hero';
 import { StatsSheet } from './experience';
 import { FoldingPaper, type FoldingPaperHandle } from './fold';
-import { PaperBackdrop, useFoldLine } from './paper';
+import { useFoldLine } from './paper';
+import { WipeBackdrop, type WipeBackdropHandle } from './wipe';
 import { SWARM_HIDDEN_AT, TIMELINE, timelineVars } from './timeline';
 import { anchorOffset, splitProgress, trackLength, trackPlan, trackProgress } from './track';
 import styles from './OpeningSequence.module.css';
@@ -37,7 +33,7 @@ interface OpeningSequenceProps {
  *
  * Opening: the hero (name and bot swarm on folded paper), then the paper
  * folds square by square into "experience" and the stats sheet slides up.
- * Gallery: the plaster fades to black and the stats sheet falls away,
+ * Gallery: a hand wipes the plaster away to black and the stats sheet falls,
  * leaving "experience" hanging in a dark hallway. The camera walks past it
  * to the stairs and down into the forced-perspective room.
  *
@@ -45,7 +41,8 @@ interface OpeningSequenceProps {
  * track.ts and the gallery's beats.ts), so scrolling never re-renders React.
  *
  * Back to front: 3D gallery → opening art (plaster, stats, paper squares,
- * pinned into the hallway once the gallery starts) → name → bots → cue.
+ * pinned into the hallway once the gallery starts) → name → cue → bots (they
+ * hold the figure that is the cursor, so they go on top).
  */
 export function OpeningSequence({ projectListId }: OpeningSequenceProps) {
   const track = useRef<HTMLDivElement>(null);
@@ -53,6 +50,8 @@ export function OpeningSequence({ projectListId }: OpeningSequenceProps) {
   const painting = useRef<HTMLDivElement>(null);
   const seamX = useFoldLine(stage);
   const paper = useRef<FoldingPaperHandle>(null);
+  const wipe = useRef<WipeBackdropHandle>(null);
+  const stageSize = useElementSize(stage);
   const swarmLift = useRef(0);
   const galleryProgress = useRef(0);
   const galleryInvalidate = useRef<(() => void) | null>(null);
@@ -79,7 +78,7 @@ export function OpeningSequence({ projectListId }: OpeningSequenceProps) {
 
       if (!hasGallery) return;
       const sheet = sheetFall(gallery);
-      element.style.setProperty('--backdrop', backdropOpacity(gallery).toFixed(4));
+      wipe.current?.update(phase(gallery, BEATS.wipe));
       element.style.setProperty('--sheet-angle', `${sheet.angle.toFixed(2)}deg`);
       element.style.setProperty('--sheet-drop', `${(sheet.drop * 100).toFixed(2)}svh`);
 
@@ -105,13 +104,30 @@ export function OpeningSequence({ projectListId }: OpeningSequenceProps) {
     () => [
       trackProgress('opening', SWARM_HIDDEN_AT, plan),
       trackProgress('opening', GALLERY_PRELOAD_AT, plan),
+      hasGallery ? trackProgress('gallery', BEATS.wipe[1], plan) : Infinity,
+      hasGallery ? trackProgress('gallery', BEATS.descend[1], plan) : Infinity,
     ],
-    [plan],
+    [plan, hasGallery],
   );
   const passed = useScrollProgress(track, applyProgress, thresholds);
   const swarmGone = passed >= 1;
+  const wiped = passed >= 3;
+  // The paper figure while the bots are out, the torn scrap on the stats,
+  // and the monocle once the hand has wiped the wall.
+  const cursor = wiped ? 'monocle' : swarmGone ? 'scrap' : 'figure';
   const galleryNear = hasGallery && passed >= 2;
   const trackInView = useInView(track);
+  const inRoom = passed >= 4 && trackInView;
+
+  // The room's walls are white: tell fixed chrome (the side nav) to switch to dark ink.
+  useEffect(() => {
+    if (!inRoom) return;
+    const root = document.documentElement;
+    root.dataset.backdrop = 'light';
+    return () => {
+      delete root.dataset.backdrop;
+    };
+  }, [inRoom]);
 
   // Side-nav targets laid over the track.
   const statsAt = anchorOffset(trackProgress('opening', TIMELINE.statsAnchor, plan), plan);
@@ -153,8 +169,7 @@ export function OpeningSequence({ projectListId }: OpeningSequenceProps) {
         ref={stage}
         className={styles.stage}
         style={{ '--seam-x': seamX } as CSSProperties}
-        // The orb replaces the mouse while the bots are out; after that the torn-paper cursor.
-        data-cursor={swarmGone ? 'scrap' : 'orb'}
+        data-cursor={cursor}
         data-room="out"
       >
         {galleryNear && (
@@ -167,9 +182,7 @@ export function OpeningSequence({ projectListId }: OpeningSequenceProps) {
           </Suspense>
         )}
         <div ref={painting} className={styles.painting}>
-          <div className={styles.backdrop}>
-            <PaperBackdrop />
-          </div>
+          <WipeBackdrop ref={wipe} size={stageSize} />
           <div className={styles.reveal}>
             <h2 className="visually-hidden">{site.revealWord}</h2>
             <StatsSheet stats={stats} />
@@ -179,14 +192,15 @@ export function OpeningSequence({ projectListId }: OpeningSequenceProps) {
         <div className={styles.name}>
           <HeroText />
         </div>
+        <div className={styles.cue}>
+          <ScrollCue targetId="stats" />
+        </div>
         <div className={styles.swarm}>
           <Suspense fallback={null}>
             <SwarmCanvas active={trackInView && !swarmGone} lift={swarmLift} />
           </Suspense>
         </div>
-        <div className={styles.cue}>
-          <ScrollCue targetId="stats" />
-        </div>
+        <MonocleCursor active={cursor === 'monocle'} />
         {hasGallery && (
           <a className={styles.skip} href={`#${projectListId}`}>
             Skip to list

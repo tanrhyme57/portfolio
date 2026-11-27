@@ -1,5 +1,7 @@
 import { Canvas, useThree } from '@react-three/fiber';
 import { Suspense, useEffect, type RefObject } from 'react';
+import { PMREMGenerator } from 'three';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 import { LAYOUT } from './layout';
 import { CameraRig } from './scene/CameraRig';
 import { Illusion } from './scene/Illusion';
@@ -45,6 +47,8 @@ function Scene({ progress, invalidateRef }: Omit<GalleryCanvasProps, 'active'>) 
   const aspect = size.width / Math.max(1, size.height);
   const portrait = aspect < 0.9;
 
+  useStudioReflections();
+
   useEffect(() => {
     invalidateRef.current = () => requestFrame();
     requestFrame();
@@ -66,7 +70,26 @@ function Scene({ progress, invalidateRef }: Omit<GalleryCanvasProps, 'active'>) 
       </Suspense>
       <Stairs materials={materials} />
       <Illusion portrait={portrait} materials={materials} />
-      <Room materials={materials} />
+      <Suspense fallback={null}>
+        <Room materials={materials} />
+      </Suspense>
     </>
   );
+}
+
+/** A soft studio light map for reflections, so the gold frames and marble have something to shine with. */
+function useStudioReflections() {
+  const get = useThree((state) => state.get);
+  useEffect(() => {
+    const { gl, scene } = get();
+    const pmrem = new PMREMGenerator(gl);
+    const target = pmrem.fromScene(new RoomEnvironment(), 0.04);
+    scene.environment = target.texture;
+    scene.environmentIntensity = 0.5;
+    pmrem.dispose();
+    return () => {
+      scene.environment = null;
+      target.dispose();
+    };
+  }, [get]);
 }

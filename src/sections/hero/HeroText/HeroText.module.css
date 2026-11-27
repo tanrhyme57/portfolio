@@ -24,12 +24,14 @@
 }
 
 .name {
-  /* Same face as the side nav labels. */
-  font-family: var(--font-ui);
-  font-size: var(--text-display);
-  font-weight: 600;
+  /* Wide, heavy grotesk. */
+  font-family: var(--font-name);
+  /* "FRANCISZEK" is about 8.6em wide at this width: shrink to fit narrow screens. */
+  font-size: min(var(--text-display), calc((100vw - 2 * var(--gutter)) / 9));
+  font-weight: 900;
+  font-stretch: 125%;
   line-height: 0.86;
-  letter-spacing: 0.04em;
+  letter-spacing: -0.01em;
   text-transform: uppercase;
   color: var(--color-paper);
   /* A touch of ink bleed. */

@@ -2,7 +2,7 @@ import { Vector3 } from 'three';
 import { describe, expect, it } from 'vitest';
 import { BEATS } from './beats';
 import { buildCameraPath, sampleCamera } from './cameraPath';
-import { backdropOpacity, cameraZAt, sheetFall, wordView } from './handoff';
+import { cameraZAt, sheetFall, wordView } from './handoff';
 import { eyePose, LAYOUT } from './layout';
 
 const keys = buildCameraPath();
@@ -25,7 +25,7 @@ describe('buildCameraPath', () => {
 
   it('holds still on the eye point during the illusion', () => {
     const eye = eyePose().position;
-    for (const at of [BEATS.illusion[0], 0.47, BEATS.illusion[1]]) {
+    for (const at of [BEATS.illusion[0], 0.49, BEATS.illusion[1]]) {
       const out = pose();
       sampleCamera(keys, at, out);
       expect(out.position.distanceTo(eye)).toBeLessThan(1e-9);
@@ -44,11 +44,6 @@ describe('buildCameraPath', () => {
 });
 
 describe('hand-off', () => {
-  it('fades the plaster to black', () => {
-    expect(backdropOpacity(0)).toBe(1);
-    expect(backdropOpacity(BEATS.darken[1])).toBe(0);
-  });
-
   it('swings the sheet, lets it hang, then drops it off screen', () => {
     expect(sheetFall(0)).toEqual({ angle: 0, drop: 0 });
     const hanging = sheetFall(BEATS.dangle[0]);

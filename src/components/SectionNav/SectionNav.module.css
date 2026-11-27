@@ -69,6 +69,11 @@
   background: var(--color-accent);
 }
 
+/* Over a light backdrop (the white gallery room), switch to dark ink. */
+:global(:root[data-backdrop='light']) .link {
+  color: var(--color-ink);
+}
+
 @media (pointer: coarse) {
   /* No hover on touch: keep it to ticks, with a bigger tap target. */
   .label {

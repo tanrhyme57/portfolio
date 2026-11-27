@@ -1,12 +1,15 @@
 /*
  * Fonts. To swap one, change it here and in the --font-* tokens in tokens.css.
  *
- * - Saira (nav, name and small text) comes from npm.
- * - The name uses a stand-in until you have your own display font. Then:
+ * - Saira (nav and small text) comes from npm.
+ * - Archivo at its widest and heaviest sets the name: a free stand-in for a
+ *   wide grotesk like Druk Wide Super (the wdth file carries the width axis).
+ * - The old display slot, for a font of your own:
  *   1. save it as /public/fonts/display.woff2 (see public/fonts/README.md)
  *   2. uncomment the @font-face below. Nothing else needs to change.
  */
 @import '@fontsource-variable/saira';
+@import '@fontsource-variable/archivo/wdth.css';
 
 /* Paperfold: our folded-paper display font (lowercase, digits, a few marks). */
 @font-face {

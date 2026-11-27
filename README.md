@@ -2,8 +2,8 @@
 
 A single-scroll portfolio. The landing screen is a swarm of small bots that
 drop in from the top of the screen and build a writhing column down to a
-glowing orb that replaces the cursor (or follows your finger), holding it
-from above.
+little paper figure that replaces the cursor (or follows your finger),
+hanging head down from the bots that hold his feet.
 
 ## Run it
 
@@ -44,15 +44,16 @@ src/
       timeline.ts          when each part happens (ranges of scroll progress)
       track.ts             how the opening and the gallery share one scroll track
       paper/               the artwork layers (plaster backdrop, paper halves)
+      wipe/                the plaster backdrop, and the hand that wipes it to black
       fold/                the paper squares folding into "experience" (choreography.ts = the maths)
       experience/          the stats sheet
-    gallery/         after the stats: the black hallway past "experience", stairs and illusion room (greybox)
+    gallery/         after the stats: the black hallway past "experience", stairs and the white gallery room
       dimensions.ts        every size and position in metres; tune the blockout here
       beats.ts             when each camera move and hold happens
       handoff.ts           plaster fades, stats sheet falls, word pinned into the 3D hallway (no three.js)
       cameraPath.ts        the camera's walk, scrubbed by scroll (pure maths, tested)
       illusion.ts          forced perspective: the flat "projects" drawing, scattered in depth
-      scene/               the boxes: hallway, stairs, illusion pieces, room
+      scene/               the boxes: hallway, stairs, illusion pieces, room (marble floor, gold frames)
     projects/        the plain "All projects" list (always there, also the no-3D fallback)
     hero/            what is on the first screen
       HeroText/            name, tagline, small label
@@ -89,3 +90,8 @@ about React, so they can be tested; components only wire things together.
 - **Stats:** `src/config/stats.ts` (placeholders for now).
 - **Projects:** `src/config/projects.ts` (placeholders; the first six hang in the gallery).
 - **Gallery timing / layout:** `src/sections/gallery/beats.ts` and `dimensions.ts`.
+
+## Credits
+
+- Chandelier: supplied as FBX, converted to `src/assets/models/chandelier.glb` (meshes merged per material, simplified from about 740k to 89k triangles, plain PBR materials instead of the missing 4K textures).
+- Gallery frame: ["Picture Frame"](https://sketchfab.com/3d-models/picture-frame-1806fe6b8d96461887f21ec3cb9c4878) by Olivia Bultinck, licensed [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). Textures resized and re-encoded; also credited on the page under "All projects".

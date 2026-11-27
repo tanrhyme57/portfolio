@@ -39,7 +39,14 @@ export const LAYOUT = {
   eye: { position: [0, 1.6, -0.8] as const, pitchDeg: -35 },
   landing: { width: 1.6, depth: 1.6 },
   stairs: { width: 1.2, steps: 14, drop: 2.5, run: 3.5 },
-  room: { width: 8, depth: 6.8, height: 3.6, frontZ: -4.6 },
+  /**
+   * The gallery: frames hang between frontZ and the back wall. The room's
+   * shell reaches forward around the stairs to the hallway's end wall and up
+   * to the hallway's ceiling, so no void shows from anywhere on the walk.
+   */
+  room: { width: 8, depth: 6.8, frontZ: -4.6 },
+  /** Hung on a rod from the ceiling over the middle of the gallery; bottom is height above the floor. */
+  chandelier: { width: 1.7, bottom: 3.0 },
   slots: {
     frame: { width: 1.2, height: 0.8, depth: 0.05 },
     image: { width: 1.0, height: 0.625 },
@@ -53,5 +60,9 @@ export const LAYOUT = {
 
 export const ROOM_FLOOR_Y = -LAYOUT.stairs.drop;
 export const ROOM_BACK_Z = LAYOUT.room.frontZ - LAYOUT.room.depth;
+/** The room's ceiling lines up with the hallway's. */
+export const ROOM_CEILING_Y = LAYOUT.hallway.height;
+/** The room's front wall stands just behind the hallway's end wall. */
+export const ROOM_FRONT_Z = -0.1;
 export const STAIRS_TOP_Z = -LAYOUT.landing.depth;
 export const STAIRS_BOTTOM_Z = STAIRS_TOP_Z - LAYOUT.stairs.run;

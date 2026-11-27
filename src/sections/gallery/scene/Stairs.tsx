@@ -8,7 +8,8 @@ export function Stairs({ materials }: { materials: GalleryMaterials }) {
   const { width: landingWidth, depth: landingDepth } = LAYOUT.landing;
   const rise = drop / steps;
   const tread = run / steps;
-  const landingThickness = 0.12;
+  // The landing stands on a solid block down to the room's floor.
+  const landingThickness = drop;
 
   return (
     <group>

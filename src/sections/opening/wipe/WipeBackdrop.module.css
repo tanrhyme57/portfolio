@@ -1,0 +1,23 @@
+.root {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.fill {
+  position: absolute;
+  inset: 0;
+  display: block;
+}
+
+.hand {
+  position: absolute;
+  left: 0;
+  top: 0;
+  max-width: none;
+  height: auto;
+  visibility: hidden;
+  will-change: transform;
+  filter: drop-shadow(0 1.5rem 2rem rgb(0 0 0 / 0.55));
+}

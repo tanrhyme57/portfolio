@@ -5,26 +5,26 @@
  * hand-off read this table.
  */
 export const BEATS = {
-  /** The plaster behind the word fades to black. */
-  darken: [0, 0.07],
+  /** A hand with a cloth wipes the plaster off the screen, leaving black. */
+  wipe: [0, 0.11],
   /** The stats sheet's right side drops; it swings from its top-left corner. */
-  swing: [0.02, 0.09],
+  swing: [0.1, 0.16],
   /** It hangs there for a moment. */
-  dangle: [0.09, 0.12],
+  dangle: [0.16, 0.19],
   /** Then it lets go and falls out of sight. */
-  fall: [0.12, 0.18],
+  fall: [0.19, 0.24],
   /** Hold on "experience" alone in the dark. */
-  linger: [0.18, 0.21],
-  /** Walk down the black hallway, past the hanging word. */
-  hallway: [0.21, 0.36],
+  linger: [0.24, 0.27],
+  /** Walk down the black hallway, past the hanging word, through the door. */
+  hallway: [0.27, 0.4],
   /** Glide into the one spot where everything lines up. */
-  arrive: [0.36, 0.44],
+  arrive: [0.4, 0.46],
   /** Hold: "projects" and a doorway, read as one flat drawing over the stairs. */
-  illusion: [0.44, 0.5],
+  illusion: [0.46, 0.52],
   /** Step sideways and down; the drawing falls apart in depth. */
-  break: [0.5, 0.6],
+  break: [0.52, 0.61],
   /** Down the stairs into the room. */
-  descend: [0.6, 0.7],
+  descend: [0.61, 0.7],
   /** Visit each project in turn, then face the exit. */
   room: [0.7, 1],
 } as const satisfies Record<string, readonly [number, number]>;

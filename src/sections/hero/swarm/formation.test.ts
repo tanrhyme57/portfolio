@@ -3,7 +3,7 @@ import { desktopSwarm, type SwarmConfig } from './config';
 import { computeFormation, createSlots, ringSizes } from './formation';
 
 const botSize = 0.25;
-// Column hangs from a ceiling at y=3 down to the orb at y=-1.
+// Column hangs from a ceiling at y=3 down to the figure at y=-1.
 const input = { tipX: 1, tipY: -1, anchorY: 3, botSize, time: 0 };
 // The organic motion is switched off so positions are exact.
 const still: SwarmConfig = {
